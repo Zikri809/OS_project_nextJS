@@ -15,6 +15,7 @@ const geistMono = Geist_Mono({
 
 export default function Home() {
   const inputref = useRef('')
+  
 
 
 
@@ -49,8 +50,12 @@ export default function Home() {
 
   return (
     <div
-      className={`h-screen w-screen text-black  bg-gradient-to-br from-black from-5% via-pink-700 via-60% to-indigo-900 to-90% ${geistSans.className} ${geistMono.className} font-[family-name:var(--font-geist-sans)]`}
+      className={`m-0  h-screen w-full text-black  bg-gradient-to-br from-black from-5% via-pink-700 via-60% to-indigo-900 to-90% ${geistSans.className} ${geistMono.className} font-[family-name:var(--font-geist-sans)]`}
     >
+      
+     
+
+
       <Toaster richColors position="top-right" />
      <div className="w-screen flex flex-col justify-around items-center backdrop-blur-3xl bg-white/5  h-screen">
       <div className="border-neutral-200 bg-white/10 backdrop-blur-3xl border-0 rounded-lg p-6 flex flex-col h-fit w-fit items-center gap-4">
@@ -65,5 +70,5 @@ export default function Home() {
       
       
     </div>
-  );
+  )
 }
