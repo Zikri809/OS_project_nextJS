@@ -1,5 +1,7 @@
 import Image from "next/image";
 import { Geist, Geist_Mono } from "next/font/google";
+import { useRef } from "react";
+import { Toaster, toast } from 'sonner'
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -12,60 +14,56 @@ const geistMono = Geist_Mono({
 });
 
 export default function Home() {
+  const inputref = useRef('')
+
+
+
+  function checkIn(){
+    //get the input value
+    navigator.geolocation.getCurrentPosition((res)=>{
+      const user_id = inputref.current.value
+      if(!user_id){
+        toast.error('Failed to get name or id. Please enter it')
+        //exit this and will not execute the rest
+        return
+      }
+      console.log('user id ', user_id)
+      console.log('location is ',res)
+      const {latitude, longitude,altitude,accuracy,heading} = res.coords
+      const date = new Date(res.timestamp)
+      const data = fetch(`/api/write_db?user_id=${user_id}&latitude=${latitude}&longitude=${longitude}&accuracy=${accuracy}&timestamp=${date.toISOString()}`)
+      //.then(()=>toast.success('Location has been stored'),()=>toast.error('Failed to insert to the DB'))
+      toast.promise(data, {
+        loading: 'Loading...',
+        success: (data) => {
+          return `Location has been stored in the DB`;
+        },
+        error: 'Failed to insert to the DB',
+      });
+      
+    },()=>toast.error('Failed to get location. Permisson denied'))
+   
+
+    }
+ 
+
   return (
     <div
-      className={`${geistSans.className} ${geistMono.className} grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]`}
+      className={`h-screen w-screen text-black  bg-gradient-to-br from-black from-5% via-pink-700 via-60% to-indigo-900 to-90% ${geistSans.className} ${geistMono.className} font-[family-name:var(--font-geist-sans)]`}
     >
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
+      <Toaster richColors position="top-right" />
+     <div className="w-screen flex flex-col justify-around items-center backdrop-blur-3xl bg-white/5  h-screen">
+      <div className="border-neutral-200 bg-white/10 backdrop-blur-3xl border-0 rounded-lg p-6 flex flex-col h-fit w-fit items-center gap-4">
+              <h1 className="font-bold text-white text-4xl">Check-In</h1>
+              <input ref={inputref} type="text" className=" border-1 h-9 border-neutral-300 rounded-md p-3 text-neutral-100" id="username" placeholder="Enter name or ID"/>
+             <button className=" hover:bg-neutral-700 bg-black text-white p-2 w-full rounded-md" onClick={checkIn}>Check In</button>
+           </div>
+     </div>
+           
        
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+      
+      
     </div>
   );
 }
