@@ -62,7 +62,7 @@ export default function Home() {
               <h1 className="font-bold text-white text-4xl">Check-In</h1>
               <input ref={inputref} type="text" className=" border-1 h-9 border-neutral-300 rounded-md p-3 text-neutral-100" id="username" placeholder="Enter name or ID"/>
              <button className=" hover:bg-neutral-700 bg-black text-white p-2 w-full rounded-md" onClick={checkIn}>Check In</button>
-           </div>
+      </div>
      </div>
            
        
